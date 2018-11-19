@@ -1,3 +1,6 @@
+### Ubuntu-based Jupyter Notebook container
+
+
 # Based on Ubuntu 18.04 (bionic)
 FROM ubuntu:bionic
 
@@ -11,7 +14,8 @@ ENV DEBIAN_FRONTEND noninteractive
 # argument:
 #	
 #	...  --build-arg NO_TENSORFLOW=true  ...
-ENV TENSORFLOW_FROM_WHEEL tensorflow-1.11.0-cp36-cp36m-linux_x86_64.whl
+#
+# ENV TENSORFLOW_WHEEL tensorflow-1.11.0-cp36-cp36m-linux_x86_64.whl
 ENV PYTHON_VERSION python3.6
 
 # Get list of packages and upgrade any base packages before we begin
@@ -50,9 +54,9 @@ RUN apt-get install -y \
 	python3-zmq
 
 # Install a local copy of tensorflow
-COPY $TENSORFLOW_FROM_WHEEL /root
-RUN [ "$NO_TENSORFLOW" = "" ] && pip3 install /root/$TENSORFLOW_FROM_WHEEL && \
-	rm /root/$TENSORFLOW_FROM_WHEEL
+COPY $TENSORFLOW_WHEEL /root
+RUN [ "$NO_TENSORFLOW" = "" ] && pip3 install /root/$TENSORFLOW_WHEEL && \
+	rm /root/$TENSORFLOW_WHEEL
 	
 # Install theano (alternative backend to keras)
 RUN apt-get install -y \
