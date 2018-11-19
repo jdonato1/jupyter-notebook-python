@@ -7,8 +7,8 @@ IMAGE=jdonato1/jupyter-python
 CONTAINER=jupyter-notebook-python
 PORT=8000
 TAG=bionic
-MNT_VOLUME=$HOME/jupyter
-JUPYTER_TOKEN_VOLUME=$HOME/.jupyter
+MNT_VOLUME=$HOME/jupyter		# jupyter folder on host 
+JUPYTER_TOKEN_VOLUME=$HOME/.jupyter	# jupyter credentials for user on host
 
 ########################## TensorFlow ##########################
 ###
@@ -31,6 +31,10 @@ export TENSORFLOW_WHEEL=tensorflow-1.12.0rc0-cp36-cp36m-linux_x86_64.whl
 ### next line:
 # export NO_TENSORFLOW=true
 
+
+# --- Do not edit below this line ---
+export UID=`id -u`
+export GID=`id -g`
 
 # Create
 mkdir -p "$MNT_VOLUME"

@@ -1,4 +1,8 @@
 ### Ubuntu-based Jupyter Notebook container
+### Dockerfile
+###
+### Use "build" script instead of calling docker run directly.  See the
+### build script.
 
 
 # Based on Ubuntu 18.04 (bionic)
@@ -11,11 +15,12 @@ ENV DEBIAN_FRONTEND noninteractive
 # To not install tensorflow from a wheel file
 #
 # To *PREVENT* this local tensorflow from being installed, build with the added
-# argument:
+# argument (theano will be used instead):
 #	
-#	...  --build-arg NO_TENSORFLOW=true  ...
-#
 # ENV TENSORFLOW_WHEEL tensorflow-1.11.0-cp36-cp36m-linux_x86_64.whl
+# ENV NO_TENSORFLOW ""
+
+# TensorFlow 1.11.0 is not compatible with python3.7.  Specify python3.6.
 ENV PYTHON_VERSION python3.6
 
 # Get list of packages and upgrade any base packages before we begin
@@ -72,6 +77,10 @@ RUN apt-get install -y \
 	jupyter-console \
 	jupyter-client 
 
+# Install sudo
+RUN apt-get install -y \
+	sudo
+
 # Create directory /root/jupyter.  This is the working directory and
 # the directory that should be mounted on the container host.
 RUN mkdir -p /root/jupyter /root/.jupyter
@@ -86,8 +95,8 @@ ENV DEBIAN_FRONEND ""
 RUN (echo superman;echo superman) | passwd root
 
 # Create a user /root/jupyter
-RUN groupadd -g 1000 jupyter
-RUN useradd -u 1000 -g 1000 -m -s /bin/bash -p `date +%N%N%N` jupyter 
+RUN groupadd -g $GID jupyter
+RUN useradd -u $UID -g $GID -m -s /bin/bash -p `date +%N%N%N` jupyter 
 RUN chown -R jupyter /root
 USER jupyter
 
