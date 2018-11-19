@@ -81,9 +81,6 @@ RUN apt-get install -y \
 RUN apt-get install -y \
 	sudo
 
-# Create directory /root/jupyter.  This is the working directory and
-# the directory that should be mounted on the container host.
-RUN mkdir -p /root/jupyter /root/.jupyter
 
 COPY motd /etc/motd
 
@@ -94,13 +91,13 @@ ENV DEBIAN_FRONEND ""
 # Set root passwd
 RUN (echo superman;echo superman) | passwd root
 
-# Create a user /root/jupyter
+# Create a user jupyter
 RUN groupadd -g $GID jupyter
 RUN useradd -u $UID -g $GID -m -s /bin/bash -p `date +%N%N%N` jupyter 
-RUN chown -R jupyter /root
+RUN mkdir -p /home/jupyter /home/jupyter/.jupyter
 USER jupyter
 
-WORKDIR /root/jupyter
+WORKDIR /home/jupyter
 
 CMD ["/etc/rc.local"]
 
