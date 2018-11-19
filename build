@@ -1,0 +1,21 @@
+#!/bin/bash -x
+
+IMAGE=jdonato1/jupyter-python
+CONTAINER=jupyter-notebook-python
+PORT=8000
+TAG=bionic
+MNT_VOLUME=$HOME/jupyter
+JUPYTER_TOKEN_VOLUME=$HOME/.jupyter
+
+mkdir -p "$MNT_VOLUME"
+mkdir -p "$JUPYTER_TOKEN_VOLUME"
+docker rm -f $CONTAINER ; \
+	docker build -t $IMAGE:latest -t $IMAGE:$TAG . && \
+	docker run \
+		--name $CONTAINER \
+		-it \
+		-p $PORT:$PORT \
+		-v "$MNT_VOLUME:/root/jupyter" \
+		-v "$JUPYTER_TOKEN_VOLUME:/root/.jupyter" \
+		$IMAGE "$@"
+
