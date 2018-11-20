@@ -11,14 +11,22 @@ FROM ubuntu:bionic
 # Disable user prompts
 ENV DEBIAN_FRONTEND noninteractive
 
+# Default user is 1000, the user that created the Linux system
+ARG UID=1000
+ARG GID=1000
+# REMOVE_ROOT.  if == 1: remove the root user.  Do this by default.
+ARG REMOVE_ROOT=1
+
 # Set a local file as tensorflow binary (python3 wheel file) to install [default]
 # To not install tensorflow from a wheel file
 #
 # To *PREVENT* this local tensorflow from being installed, build with the added
 # argument (theano will be used instead):
+#
+#	... --build-arg NO_TENSORFLOW=1 ...
 #	
-# ENV TENSORFLOW_WHEEL tensorflow-1.11.0-cp36-cp36m-linux_x86_64.whl
-# ENV NO_TENSORFLOW ""
+ARG TENSORFLOW_WHEEL=tensorflow-1.11.0-cp36-cp36m-linux_x86_64.whl
+ARG NO_TENSORFLOW=""
 
 # TensorFlow 1.11.0 is not compatible with python3.7.  Specify python3.6.
 ENV PYTHON_VERSION python3.6
@@ -60,7 +68,8 @@ RUN apt-get install -y \
 
 # Install a local copy of tensorflow
 COPY $TENSORFLOW_WHEEL /root
-RUN [ "$NO_TENSORFLOW" = "" ] && pip3 install /root/$TENSORFLOW_WHEEL && \
+RUN [ "$NO_TENSORFLOW" = "" ] && \
+	pip3 install /root/$TENSORFLOW_WHEEL && \
 	rm /root/$TENSORFLOW_WHEEL
 	
 # Install theano (alternative backend to keras)
@@ -78,8 +87,7 @@ RUN apt-get install -y \
 	jupyter-client 
 
 # Install sudo
-RUN apt-get install -y \
-	sudo
+RUN apt-get install -y sudo 
 
 
 COPY motd /etc/motd
@@ -88,13 +96,19 @@ COPY rc.local /etc/rc.local
 
 ENV DEBIAN_FRONEND ""
 
-# Set root passwd
-RUN (echo superman;echo superman) | passwd root
+ARG JUPYTER_PASSWD=jupyter
 
 # Create a user jupyter
-RUN groupadd -g $GID jupyter
-RUN useradd -u $UID -g $GID -m -s /bin/bash -p `date +%N%N%N` jupyter 
-RUN mkdir -p /home/jupyter /home/jupyter/.jupyter
+RUN groupadd -g $GID jupyter && \
+	groupadd -r admin && \
+	useradd -u $UID -g $GID -G admin -m -s /bin/bash jupyter && \
+	( echo $JUPYTER_PASSWD; echo $JUPYTER_PASSWD ) | passwd jupyter && \
+	mkdir -p /home/jupyter/.jupyter
+
+# Remove the root user account if REMOVE_ROOT == 1 (default)
+# This is a security enhancement to prevent abuse in the event the container is compromised.
+RUN [ "$REMOVE_ROOT" = "1" ] && userdel -r -f root || true
+
 USER jupyter
 
 WORKDIR /home/jupyter

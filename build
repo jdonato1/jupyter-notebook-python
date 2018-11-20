@@ -24,7 +24,7 @@ JUPYTER_TOKEN_VOLUME=$HOME/.jupyter	# jupyter credentials for user on host
 ###   https://github.com/jdonato1/tensorflow-from-source/tree/master/build_product
 ###
 # export TENSORFLOW_WHEEL=tensorflow-1.11.0-cp36-cp36m-linux_x86_64.whl
-export TENSORFLOW_WHEEL=tensorflow-1.12.0rc0-cp36-cp36m-linux_x86_64.whl
+export TENSORFLOW_WHEEL="tensorflow-1.12.0rc0-cp36-cp36m-linux_x86_64.whl"
 #
 ### The default of this script is to install tensorflow from wheel file.
 ### To *NOT* install tensorflow (Keras defaults to theano), uncomment the
@@ -40,12 +40,19 @@ export GID=`id -g`
 mkdir -p "$MNT_VOLUME"
 mkdir -p "$JUPYTER_TOKEN_VOLUME"
 docker rm -f $CONTAINER ; \
-	docker build -t $IMAGE:latest -t $IMAGE:$TAG . && \
+	docker build -t $IMAGE:latest -t $IMAGE:$TAG \
+		--build-arg NO_TENSORFLOW=$NO_TENSORFLOW \
+		--build-arg TENSORFLOW_WHEEL=$TENSORFLOW_WHEEL \
+		--build-arg UID=$UID \
+		--build-arg GID=$GID \
+		"$@" \
+		. && \
+	set -x && \
 	docker run \
 		--name $CONTAINER \
 		-it \
 		-p $PORT:$PORT \
 		-v "$MNT_VOLUME:/home/jupyter" \
 		-v "$JUPYTER_TOKEN_VOLUME:/home/jupyter/.jupyter" \
-		$IMAGE "$@"
+		$IMAGE 
 

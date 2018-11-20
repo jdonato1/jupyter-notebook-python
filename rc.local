@@ -9,6 +9,13 @@ echo $IP > $HOME/.container_ip
 
 echo "Container's IP address is:  $IP   Listening port 8000 (Jupyter-notebook)"
 
+if ! [ -r $HOME/.jupyter/jupyter_notebook_config.json ]
+then
+	echo "Jupyter notebook password has not been configured yet."
+	echo "Set password for jupyter notebook: "
+	jupyter-notebook password
+fi
+
 /usr/bin/tmux new-session -d -s jupyter_notebook /bin/bash -c "/usr/bin/jupyter-notebook --ip=$IP \
 	 --port=8000 --allow-root 2>&1 | tee $NOTELOG"
 

@@ -5,9 +5,12 @@ Poorman's Kaggle / Jorge Donato / jmdonato1@sbcglobal.net
 * The /root/jupyter directory will mount Docker volume ~/jupyter on your  
   computer.  Configure the "-v" mount as desired. (Free advice: not "/")
 * To set a password once and not use the temporary token, type:
+
 	1.  Exit the console python session with:  >  exit
-	2.  Run the following:                     # jupyter-notebook password
+	2.  Run the following:                     $ jupyter-notebook password
+
 * Help with Python magic commands:  %lsmagic
-* Jupyter will be listening on port 8000 by default.
-* Jupyter-Console will start momentarily.
+* Jupyter will be listening on port 8000 by default. The port continues to 
+  listen in the background even if Jupyter-Console is exited.
+* Jupyter-Console (CLI) will start momentarily.
 
