@@ -3,8 +3,8 @@
 # ./build		# build the container from scratch, set environment 
 #			# variables.
 
-IMAGE=jdonato1/jupyter-python
-CONTAINER=jupyter-notebook-python
+IMAGE=jdonato1/jupyter-notebook-python
+CONTAINER=jupyter-notebook
 PORT=8000
 TAG=bionic
 MNT_VOLUME=$HOME/jupyter		# jupyter folder on host 
