@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Banner
+/bin/cat /etc/README.md
 /bin/cat /etc/motd
 
 export NOTELOG=$HOME/.jupyter-notebook

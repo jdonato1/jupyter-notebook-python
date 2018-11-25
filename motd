@@ -1,4 +1,4 @@
-Poorman's Kaggle / Jorge Donato / jmdonato1@sbcglobal.net
+Jupyter Notebook Docker Container / Jorge Donato / jmdonato1@sbcglobal.net
 ===========================================================================
 * The container will be listening for connections on TCP port 8000: will be
   redirected to the container's Jupyter Notebook.
@@ -12,5 +12,13 @@ Poorman's Kaggle / Jorge Donato / jmdonato1@sbcglobal.net
 * Help with Python magic commands:  %lsmagic
 * Jupyter will be listening on port 8000 by default. The port continues to 
   listen in the background even if Jupyter-Console is exited.
+* TensorFlow is not automatically installed.  Either:
+	1. Install tensorflow from a python3 wheel file:
+		# pip3 install tensorflow-v1.11.0*whl
+	  OR
+	2. Run ./tf_build (to build tensorflow from source code.  Good for
+	   CPUs that do not support the "avx2" instruction set.
+	   NOTE: Takes many hours to build from source.
+		# ./tf_build -s11
 * Jupyter-Console (CLI) will start momentarily.
 

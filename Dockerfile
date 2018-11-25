@@ -14,19 +14,12 @@ ENV DEBIAN_FRONTEND noninteractive
 # Default user is 1000, the user that created the Linux system
 ARG UID=1000
 ARG GID=1000
-# REMOVE_ROOT.  if == 1: remove the root user.  Do this by default.
-ARG REMOVE_ROOT=1
+# REMOVE_ROOT.  if == 1: remove the root user.  Not done by default.
+ARG REMOVE_ROOT=0
 
 # Set a local file as tensorflow binary (python3 wheel file) to install [default]
-# To not install tensorflow from a wheel file
-#
-# To *PREVENT* this local tensorflow from being installed, build with the added
-# argument (theano will be used instead):
-#
-#	... --build-arg NO_TENSORFLOW=1 ...
 #	
 ARG TENSORFLOW_WHEEL=tensorflow-1.11.0-cp36-cp36m-linux_x86_64.whl
-ARG NO_TENSORFLOW=""
 
 # TensorFlow 1.11.0 is not compatible with python3.7.  Specify python3.6.
 ENV PYTHON_VERSION python3.6
@@ -40,6 +33,7 @@ RUN apt-get install -y \
 	vim \
 	gawk \
 	tmux \
+	wget \
 	net-tools 
 
 # Install python3 and the pip3 installer
@@ -60,22 +54,34 @@ RUN apt-get install -y \
 	python3-sklearn-pandas \
 	python3-matplotlib \
 	python3-matplotlib-venn \
-	python3-colormap
+	python3-colormap \
+	python3-pygraphviz
 
 # Install a message queue
 RUN apt-get install -y \
 	python3-zmq
 
-# Install a local copy of tensorflow
-COPY $TENSORFLOW_WHEEL /root
-RUN [ "$NO_TENSORFLOW" = "" ] && \
-	pip3 install /root/$TENSORFLOW_WHEEL && \
-	rm /root/$TENSORFLOW_WHEEL
-	
 # Install theano (alternative backend to keras)
 RUN apt-get install -y \
 	python3-theano 
 
+# Install tensorflow.  This downloads a version of
+# tensorflow for CPUs that do not support avx/avx2
+# instruction sets.  See:
+#	Github and Docker Hub:
+#		jdonato1/tensorflow-from-source
+#
+# If your CPU supports these instruction sets, 
+# you can manually install an official tensorflow
+# wheel file:
+#	# sudo pip3 install tensorflow
+#		OR
+#	# sudo pip3 install tensorflow-gpu
+#
+COPY $TENSORFLOW_WHEEL /root
+RUN pip3 install --upgrade /root/$TENSORFLOW_WHEEL && \
+	rm -f /root/$TENSORFLOW_WHEEL
+	
 # Install keras (uses tensorflow or theano as backend)
 RUN apt-get install -y \
 	python3-keras
@@ -88,7 +94,6 @@ RUN apt-get install -y \
 
 # Install sudo
 RUN apt-get install -y sudo 
-
 
 COPY motd /etc/motd
 
@@ -105,11 +110,28 @@ RUN groupadd -g $GID jupyter && \
 	( echo $JUPYTER_PASSWD; echo $JUPYTER_PASSWD ) | passwd jupyter && \
 	mkdir -p /home/jupyter/.jupyter
 
+# Upgrade any pip packages
+RUN ( pip3 list | \
+	cut -d" " -f1 | \
+	sudo -H xargs pip3 install --upgrade ) || \
+		true
+
 # Remove the root user account if REMOVE_ROOT == 1 (default)
 # This is a security enhancement to prevent abuse in the event the container is compromised.
 RUN [ "$REMOVE_ROOT" = "1" ] && userdel -r -f root || true
 
 USER jupyter
+
+# tf_build - script from jdonato1/tensorflow-from-source
+# Builds a tensorflow wheel file from source.  Particularly useful for Linux
+# computers with CPUs that lack the "avx2" instruction set.
+#
+# Recommendation:  Build tensorflow v1.11.0:
+#	$ ./tf_build -s11
+#
+COPY tf_build /home/jupyter
+
+COPY README.md /etc
 
 WORKDIR /home/jupyter
 

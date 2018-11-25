@@ -21,27 +21,26 @@ JUPYTER_TOKEN_VOLUME=$HOME/.jupyter	# jupyter credentials for user on host
 ### and it takes a very long time to compile.  The binary result can be 
 ### downloaded and installed right away.
 ###	
-###   https://github.com/jdonato1/tensorflow-from-source/tree/master/build_product
+###   https://github.com/jdonato1/tensorflow-from-source/tree/master
 ###
-# export TENSORFLOW_WHEEL=tensorflow-1.11.0-cp36-cp36m-linux_x86_64.whl
-export TENSORFLOW_WHEEL="tensorflow-1.12.0rc0-cp36-cp36m-linux_x86_64.whl"
-#
-### The default of this script is to install tensorflow from wheel file.
-### To *NOT* install tensorflow (Keras defaults to theano), uncomment the
-### next line:
-# export NO_TENSORFLOW=true
-
+export TENSORFLOW_WHEEL=tensorflow-1.11.0-cp36-cp36m-linux_x86_64.whl
+export TF_URL_WITHOUT_AVX=https://media.githubusercontent.com/media/jdonato1/tensorflow-from-source/master/build_product_with_avx/$TENSORFLOW_WHEEL
 
 # --- Do not edit below this line ---
 export UID=`id -u`
 export GID=`id -g`
+
+# Download tensorflow for non-avx2 CPUs
+if ! [ -r $TENSORFLOW_WHEEL ]
+then
+	wget -o $TENSORFLOW_WHEEL $TF_URL_WITHOUT_AVX
+fi
 
 # Create
 mkdir -p "$MNT_VOLUME"
 mkdir -p "$JUPYTER_TOKEN_VOLUME"
 docker rm -f $CONTAINER ; \
 	docker build -t $IMAGE:latest -t $IMAGE:$TAG \
-		--build-arg NO_TENSORFLOW=$NO_TENSORFLOW \
 		--build-arg TENSORFLOW_WHEEL=$TENSORFLOW_WHEEL \
 		--build-arg UID=$UID \
 		--build-arg GID=$GID \
