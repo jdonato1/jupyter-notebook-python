@@ -57,6 +57,8 @@ RUN apt-get install -y \
 	python3-colormap \
 	python3-pygraphviz
 
+RUN pip3 install graphviz
+
 # Install a message queue
 RUN apt-get install -y \
 	python3-zmq
@@ -109,8 +111,8 @@ RUN groupadd -g $GID jupyter && \
 	useradd -u $UID -g $GID -G admin -m -s /bin/bash jupyter && \
 	( echo $JUPYTER_PASSWD; echo $JUPYTER_PASSWD ) | passwd jupyter && \
 	mkdir -p /home/jupyter/.jupyter /home/jupyter && \
-	chmod -R 755  /home/jupyter/.jupyter /home/jupyter && \
-	chown -R jupyter:jupyter /home/jupyter/.jupyter /home/jupyter 
+	chown -R jupyter:jupyter /home/jupyter/.jupyter /home/jupyter && \
+	chmod -R 755 /home/jupyter/.jupyter /home/jupyter 
 
 # Upgrade any pip packages
 RUN ( pip3 list | \
