@@ -53,7 +53,7 @@ docker rm -f $CONTAINER ; \
 		--name $CONTAINER \
 		-it \
 		-p $PORT:$PORT \
-		-v "$MNT_VOLUME:/home/jupyter" \
-		-v "$JUPYTER_TOKEN_VOLUME:/home/jupyter/.jupyter" \
+		-v "$MNT_VOLUME:/root" \
+		-v "$JUPYTER_TOKEN_VOLUME:/root/.jupyter" \
 		$IMAGE 
 
