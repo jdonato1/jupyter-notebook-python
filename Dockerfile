@@ -122,6 +122,8 @@ RUN ( pip3 list | \
 	sudo -H xargs pip3 install --upgrade ) || \
 		true
 
+RUN mkdir -p /root/jupyter /root/.jupyter
+
 ENV DEBIAN_FRONEND ""
 
 # Remove the root user account if REMOVE_ROOT == 1 (default)
