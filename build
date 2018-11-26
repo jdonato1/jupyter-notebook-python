@@ -27,9 +27,10 @@ JUPYTER_TOKEN_VOLUME=$HOME/.jupyter	# jupyter credentials for user on host
 export TENSORFLOW_WHEEL=tensorflow-1.11.0-cp36-cp36m-linux_x86_64.whl
 export TF_URL_WITHOUT_AVX=https://media.githubusercontent.com/media/jdonato1/tensorflow-from-source/master/build_product_with_avx/$TENSORFLOW_WHEEL
 
+export UID=0
+export GID=0
+
 # --- Do not edit below this line ---
-export UID=`id -u`
-export GID=`id -g`
 
 # Download tensorflow for non-avx2 CPUs
 if ! [ -r $TENSORFLOW_WHEEL ]

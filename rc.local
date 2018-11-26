@@ -4,7 +4,7 @@
 /bin/cat /etc/README.md
 /bin/cat /etc/motd
 
-export HOME=/home/jupyter
+export HOME=/root
 export NOTELOG=$HOME/.jupyter-notebook
 export IP=$( /sbin/ifconfig eth0 | /bin/grep inet | /usr/bin/gawk '{print $2}' )
 echo $IP > $HOME/.container_ip

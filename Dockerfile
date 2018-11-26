@@ -3,6 +3,8 @@
 ###
 ### Use "build" script instead of calling docker run directly.  See the
 ### build script.
+###
+### For now using root user
 
 
 # Based on Ubuntu 18.04 (bionic)
@@ -12,8 +14,8 @@ FROM ubuntu:bionic
 ENV DEBIAN_FRONTEND noninteractive
 
 # Default user is 1000, the user that created the Linux system
-ARG UID=1000
-ARG GID=1000
+ARG UID=0
+ARG GID=0
 # REMOVE_ROOT.  if == 1: remove the root user.  Not done by default.
 ARG REMOVE_ROOT=0
 
@@ -101,18 +103,18 @@ COPY motd /etc/motd
 
 COPY rc.local /etc/rc.local
 
-ENV DEBIAN_FRONEND ""
+# tf_build - script from jdonato1/tensorflow-from-source
+# Builds a tensorflow wheel file from source.  Particularly useful for Linux
+# computers with CPUs that lack the "avx2" instruction set.
+#
+# Recommendation:  Build tensorflow v1.11.0:
+#       $ ./tf_build -s11
+#
+COPY tf_build /root
 
-ARG JUPYTER_PASSWD=jupyter
+COPY README.md /etc
 
-# Create a user jupyter
-RUN groupadd -g $GID jupyter && \
-	groupadd -r admin && \
-	useradd -u $UID -g $GID -G admin -m -s /bin/bash jupyter && \
-	( echo $JUPYTER_PASSWD; echo $JUPYTER_PASSWD ) | passwd jupyter && \
-	mkdir -p /home/jupyter/.jupyter /home/jupyter && \
-	chown -R jupyter:jupyter /home/jupyter/.jupyter /home/jupyter && \
-	chmod -R 755 /home/jupyter/.jupyter /home/jupyter 
+
 
 # Upgrade any pip packages
 RUN ( pip3 list | \
@@ -120,24 +122,15 @@ RUN ( pip3 list | \
 	sudo -H xargs pip3 install --upgrade ) || \
 		true
 
+ENV DEBIAN_FRONEND ""
+
 # Remove the root user account if REMOVE_ROOT == 1 (default)
 # This is a security enhancement to prevent abuse in the event the container is compromised.
 RUN [ "$REMOVE_ROOT" = "1" ] && userdel -r -f root || true
 
-USER jupyter
+WORKDIR /root
 
-# tf_build - script from jdonato1/tensorflow-from-source
-# Builds a tensorflow wheel file from source.  Particularly useful for Linux
-# computers with CPUs that lack the "avx2" instruction set.
-#
-# Recommendation:  Build tensorflow v1.11.0:
-#	$ ./tf_build -s11
-#
-COPY tf_build /home/jupyter
-
-COPY README.md /etc
-
-WORKDIR /home/jupyter
+ENV DEBIAN_FRONEND ""
 
 CMD ["/etc/rc.local"]
 
