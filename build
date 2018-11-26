@@ -2,7 +2,7 @@
 
 # ./build		# build the container from scratch, set environment 
 #			# variables.
-
+ 
 IMAGE=jupyter-notebook-python
 CONTAINER=jupyter-notebook
 USER=jdonato1
