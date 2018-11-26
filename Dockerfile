@@ -108,7 +108,9 @@ RUN groupadd -g $GID jupyter && \
 	groupadd -r admin && \
 	useradd -u $UID -g $GID -G admin -m -s /bin/bash jupyter && \
 	( echo $JUPYTER_PASSWD; echo $JUPYTER_PASSWD ) | passwd jupyter && \
-	mkdir -p /home/jupyter/.jupyter
+	mkdir -p /home/jupyter/.jupyter /home/jupyter && \
+	chmod -R 755  /home/jupyter/.jupyter /home/jupyter && \
+	chown -R jupyter:jupyter /home/jupyter/.jupyter /home/jupyter 
 
 # Upgrade any pip packages
 RUN ( pip3 list | \
