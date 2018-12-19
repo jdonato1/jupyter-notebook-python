@@ -47,6 +47,7 @@ RUN apt-get install -y \
 RUN apt-get install -y \
 	python3-pandas \
 	python3-geopandas \
+	python3-xlrd \
 	python3-numpy 
 	
 # Install graphical display packages
