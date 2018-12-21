@@ -44,6 +44,7 @@ RUN apt-get install -y \
 	python3-pip
 
 # Install Data Science packages
+RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y \
 	python3-pandas \
 	python3-geopandas \
