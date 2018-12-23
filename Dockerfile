@@ -61,7 +61,9 @@ RUN apt-get install -y \
 	python3-colormap \
 	python3-pygraphviz
 
-RUN pip3 install graphviz
+RUN pip3 install \
+	graphviz \
+	mplleaflet
 
 # Install a message queue
 RUN apt-get install -y \
