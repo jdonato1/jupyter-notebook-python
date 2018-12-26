@@ -59,7 +59,8 @@ RUN apt-get install -y \
 	python3-matplotlib \
 	python3-matplotlib-venn \
 	python3-colormap \
-	python3-pygraphviz
+	python3-pygraphviz \
+	python3-snappy 
 
 # graphviz for graphics (visualiztion)
 # mplleaflet for maps (geo-spatial)
