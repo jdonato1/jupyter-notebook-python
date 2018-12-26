@@ -61,9 +61,14 @@ RUN apt-get install -y \
 	python3-colormap \
 	python3-pygraphviz
 
+# graphviz for graphics (visualiztion)
+# mplleaflet for maps (geo-spatial)
+# pyarrow and fastparquet for supporting parquet file format
 RUN pip3 install \
 	graphviz \
-	mplleaflet
+	mplleaflet \
+	fastparquet \
+	pyarrow
 
 # Install a message queue
 RUN apt-get install -y \
