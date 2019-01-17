@@ -4,6 +4,7 @@
 /bin/cat /etc/README.md
 /bin/cat /etc/motd
 
+export JUPYTER_PORT=${JUPYTER_PORT:-8000}
 export HOME=/root
 export NOTELOG=$HOME/.jupyter-notebook
 export IP=$( /sbin/ifconfig eth0 | /bin/grep inet | /usr/bin/gawk '{print $2}' )
@@ -19,7 +20,7 @@ then
 fi
 
 /usr/bin/tmux new-session -d -s jupyter_notebook /bin/bash -c "/usr/bin/jupyter-notebook --ip=$IP \
-	 --port=8000 --allow-root 2>&1 | tee $NOTELOG"
+	 --port=$JUPYTER_PORT --allow-root 2>&1 | tee $NOTELOG"
 
 printf Waiting 10 seconds for the token:
 
