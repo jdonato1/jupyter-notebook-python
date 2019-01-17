@@ -53,7 +53,6 @@ RUN apt-get install -y \
 	
 # Install graphical display packages
 RUN apt-get install -y \
-	python3-seaborn \
 	python3-sklearn \
 	python3-sklearn-pandas \
 	python3-matplotlib \
@@ -66,11 +65,17 @@ RUN apt-get install -y \
 # graphviz for graphics (visualiztion)
 # mplleaflet for maps (geo-spatial)
 # pyarrow and fastparquet for supporting parquet file format
+#
+# Install seaborn from pip.  Pip uses 0.9.0, which supports 'hue'.  
+# The Ubuntu repository still uses 0.8.0 which does not support 'hue'.
+# See:  https://towardsdatascience.com/visualizing-data-with-pair-plots-in-python-f228cf529166
+#	https://seaborn.pydata.org/generated/seaborn.pairplot.html
 RUN pip3 install \
 	graphviz \
 	mplleaflet \
 	fastparquet \
-	pyarrow
+	pyarrow \
+	seaborn
 
 # Install a message queue
 RUN apt-get install -y \
