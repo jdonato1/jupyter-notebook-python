@@ -105,7 +105,12 @@ RUN apt-get install -y \
 RUN apt-get install -y \
 	jupyter-notebook \
 	jupyter-console \
-	jupyter-client 
+	jupyter-client
+
+# Install nbmerge to merge Jupyter notebooks on command-line
+RUN pip3 install \
+	nbmerge \
+	nbformat
 
 # Install sudo
 RUN apt-get install -y sudo 
