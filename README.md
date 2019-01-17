@@ -14,7 +14,12 @@ The container has the following features:
 
 To create the container from Docker Hub image (first time):
 
-$ mkdir $HOME/jupyter $HOME/.jupyter ; docker run --name jupyter-notebook -it -p 8000:8000  -v $HOME/jupyter:/root -v $HOME/.jupyter:/root/.jupyter jdonato1/jupyter-notebook-python
+Version 1.1.1 (1/17/2019) and later:
+$ mkdir $HOME/jupyter $HOME/.jupyter ; export JUPYTER_PORT=8000; docker run --name jupyter-notebook -it -e JUPYTER_PORT=$JUPYTER_PORT -p $JUPYTER_PORT:$JUPYTER_PORT  -v $HOME/jupyter:/root -v $HOME/.jupyter:/root/.jupyter jdonato1/jupyter-notebook-python
+
+Prior to version 1.1.1:
+$ mkdir $HOME/jupyter $HOME/.jupyter ; docker run --name jupyter-notebook -it -p 8000:8000 -v $HOME/jupyter:/root -v $HOME/.jupyter:/root/.jupyter jdonato1/jupyter-notebook-python
+
 
 
 
