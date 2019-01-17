@@ -25,7 +25,7 @@ $ mkdir $HOME/jupyter $HOME/.jupyter ; docker run --name jupyter-notebook -it -p
 
 To build the container from scratch, run:
 
-* ./build
+* ./build 
 
 
 To access root account, type:
