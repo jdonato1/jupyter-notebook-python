@@ -124,6 +124,9 @@ COPY rc.local /etc/rc.local
 
 COPY motd /etc/motd
 
+# Redo the copy of rc.local, due to a cached copy of
+# rc.local that just won't go away.
+COPY rc.local /etc/rc.local
 
 # tf_build - script from jdonato1/tensorflow-from-source
 # Builds a tensorflow wheel file from source.  Particularly useful for Linux
