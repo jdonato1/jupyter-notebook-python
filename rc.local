@@ -4,13 +4,13 @@
 /bin/cat /etc/README.md
 /bin/cat /etc/motd
 
-export JUPYTER_PORT=${JUPYTER_PORT:-8000}
+export JUPYTER_PORT=${JUPYTER_PORT:-8000}  ;#
 export HOME=/root
 export NOTELOG=$HOME/.jupyter-notebook
 export IP=$( /sbin/ifconfig eth0 | /bin/grep inet | /usr/bin/gawk '{print $2}' )
 echo $IP > $HOME/.container_ip
 
-echo "Container's IP address is:  $IP   Listening port 8000 (Jupyter-notebook)"
+echo "Container's IP address is:  $IP   Listening port $JUPYTER_PORT (Jupyter-notebook)"
 
 if ! [ -r $HOME/.jupyter/jupyter_notebook_config.json ]
 then
@@ -20,7 +20,7 @@ then
 fi
 
 /usr/bin/tmux new-session -d -s jupyter_notebook /bin/bash -c "/usr/bin/jupyter-notebook --ip=$IP \
-	 --port=$JUPYTER_PORT --allow-root 2>&1 | tee $NOTELOG"
+	 --port=$JUPYTER_PORT --allow-root 2>&1 | tee $NOTELOG" ; #
 
 printf Waiting 10 seconds for the token:
 
@@ -30,6 +30,10 @@ for i in `seq 10`; do
 	then
 		# Copy with localhost IP address.  This allows
 		# Localhost IP to work as well
+		printf "\033[44;36m\n"
+		egrep -o 'http.*' $NOTELOG
+		printf "\033[0m\n"
+		echo
 		printf "\033[44;36m\n"
 		egrep -o 'http.*' $NOTELOG | sed "s/$IP/127.0.0.1/g"
 		printf "\033[0m\n"
