@@ -120,9 +120,10 @@ RUN pip3 install \
 # Install sudo
 RUN apt-get install -y sudo 
 
+COPY rc.local /etc/rc.local
+
 COPY motd /etc/motd
 
-COPY rc.local /etc/rc.local
 
 # tf_build - script from jdonato1/tensorflow-from-source
 # Builds a tensorflow wheel file from source.  Particularly useful for Linux
