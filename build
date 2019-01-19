@@ -3,10 +3,10 @@
 # ./build		# build the container from scratch, set environment 
 #			# variables.
  
-IMAGE=jupyter-notebook-python
+IMAGE=jdonato1/jupyter-notebook-python
 CONTAINER=jupyter-notebook
 USER=jdonato1
-PORT=8000
+export JUPYTER_PORT=${JUPYTER_PORT:-8000}
 TAG=bionic
 MNT_VOLUME=$HOME/jupyter		# jupyter folder on host 
 JUPYTER_TOKEN_VOLUME=$HOME/.jupyter	# jupyter credentials for user on host
@@ -52,7 +52,8 @@ docker rm -f $CONTAINER ; \
 	docker run \
 		--name $CONTAINER \
 		-it \
-		-p $PORT:$PORT \
+		--env JUPYTER_PORT=$JUPYTER_PORT \
+		-p $JUPYTER_PORT:$JUPYTER_PORT \
 		-v "$MNT_VOLUME:/root" \
 		-v "$JUPYTER_TOKEN_VOLUME:/root/.jupyter" \
 		$IMAGE 
