@@ -5,6 +5,8 @@
 ### build script.
 ###
 ### For now using root user
+###
+### 2019/04/28 - Webhook test
 
 
 # Based on Ubuntu 18.04 (bionic)
@@ -50,11 +52,13 @@ RUN apt-get install -y \
 	python3-geopandas \
 	python3-xlrd \
 	python3-numpy 
+
+# Install scikit learn with 0.20+ using pip
+# 0.20 supports returning fit estimators back from cross_validate()
+RUN pip3 install --upgrade 'scikit-learn>0.20'
 	
 # Install graphical display packages
 RUN apt-get install -y \
-	python3-sklearn \
-	python3-sklearn-pandas \
 	python3-matplotlib \
 	python3-matplotlib-venn \
 	python3-colormap \
